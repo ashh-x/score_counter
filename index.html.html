@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>basic HTML/CSS/JS</title>
+  <!-- CSS: styles go here -->
+  <style>
+    /* reset & base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+      background: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .card {
+      background: white;
+      max-width: 400px;
+      width: 100%;
+      border-radius: 24px;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08), 0 5px 12px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subhead {
+      color: #64748b;
+      font-size: 0.95rem;
+      margin-bottom: 1.8rem;
+      border-bottom: 1px solid #e9eef3;
+      padding-bottom: 1rem;
+    }
+
+    .counter-area {
+      background: #f1f5f9;
+      border-radius: 80px;
+      padding: 1.2rem 1rem;
+      margin-bottom: 2rem;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .counter-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 500;
+      color: #475569;
+    }
+
+    #countValue {
+      display: block;
+      font-size: 4.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #0f172a;
+      margin-top: 0.1rem;
+      transition: color 0.2s;
+      word-break: break-word;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .btn {
+      border: none;
+      background: #ffffff;
+      font-family: inherit;
+      font-weight: 500;
+      font-size: 1rem;
+      padding: 0.75rem 1.4rem;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
+      transition: all 0.15s;
+      border: 1px solid #dbe3eb;
+      color: #1e293b;
+      flex: 1 1 auto;
+      min-width: 100px;
+    }
+
+    .btn:hover {
+      background: #f8fafc;
+      border-color: #b9c7d9;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-primary {
+      background: #1e293b;
+      border-color: #1e293b;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0f172a;
+      border-color: #0f172a;
+    }
+
+    .message {
+      margin-top: 1.6rem;
+      font-size: 0.9rem;
+      min-height: 1.8rem;
+      color: #3b82f6;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+    .footer-note {
+      margin-top: 0.8rem;
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    /* small screens */
+    @media (max-width: 420px) {
+      .card {
+        padding: 1.6rem 1.2rem;
+      }
+      #countValue {
+        font-size: 3.5rem;
+      }
+      .btn {
+        padding: 0.7rem 1rem;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- main card -->
+  <main class="card">
+    <h1>✨ JS Counter</h1>
+    <p class="subhead">click buttons to change the number</p>
+
+    <!-- counter display -->
+    <div class="counter-area">
+      <span class="counter-label">current value</span>
+      <span id="countValue">0</span>
+    </div>
+
+    <!-- buttons -->
+    <div class="btn-group">
+      <button class="btn" id="decrementBtn" aria-label="decrease">−1</button>
+      <button class="btn btn-primary" id="resetBtn" aria-label="reset to zero">reset</button>
+      <button class="btn" id="incrementBtn" aria-label="increase">+1</button>
+    </div>
+
+    <!-- dynamic message -->
+    <div id="messageBox" class="message">ready 👋</div>
+    <div class="footer-note">basic HTML + CSS + JS</div>
+  </main>
+
+  <!-- JavaScript: interactive logic -->
+  <script>
+    (function() {
+      // ----- DOM elements -----
+      const countDisplay = document.getElementById('countValue');
+      const messageBox = document.getElementById('messageBox');
+      const decrementBtn = document.getElementById('decrementBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const incrementBtn = document.getElementById('incrementBtn');
+
+      // ----- state -----
+      let count = 0;
+      const MAX_COUNT = 99;
+      const MIN_COUNT = -99;
+
+      // ----- update UI (number & message) -----
+      function updateUI() {
+        // update number
+        countDisplay.textContent = count;
+
+        // color feedback (optional)
+        if (count > 0) {
+          countDisplay.style.color = '#0f172a';  // dark
+        } else if (count < 0) {
+          countDisplay.style.color = '#b91c1c';  // subtle red for negative
+        } else {
+          countDisplay.style.color = '#0f172a';  // back to dark
+        }
+
+        // message based on value
+        let msg = '';
+        if (count === 0) {
+          msg = '⚡ zero — neutral';
+        } else if (count > 0) {
+          msg = `👍 positive (${count})`;
+        } else {
+          msg = `⚠️ negative (${count})`;
+        }
+
+        // limit warning
+        if (count >= MAX_COUNT) {
+          msg = `🔝 max limit reached (${MAX_COUNT})`;
+        } else if (count <= MIN_COUNT) {
+          msg = `🔻 min limit reached (${MIN_COUNT})`;
+        }
+
+        messageBox.textContent = msg;
+      }
+
+      // ----- increment -----
+      function increment() {
+        if (count < MAX_COUNT) {
+          count += 1;
+          updateUI();
+        } else {
+          messageBox.textContent = `❌ cannot exceed ${MAX_COUNT}`;
+          // small shake effect on number (optional)
+          countDisplay.style.transform = 'scale(1.05)';
+          setTimeout(() => { countDisplay.style.transform = ''; }, 150);
+        }
+      }
+
+      // ----- decrement -----
+      function decrement() {
+        if (count > MIN_COUNT) {
+          count -= 1;
+          updateUI();
+        } else {
+          messageBox.textContent = `❌ cannot go below ${MIN_COUNT}`;
+          countDisplay.style.transform = 'scale(1.05)';
+          setTimeout(() => { countDisplay.style.transform = ''; }, 150);
+        }
+      }
+
+      // ----- reset -----
+      function reset() {
+        count = 0;
+        updateUI();
+        messageBox.textContent = '🔄 reset to zero';
+        // subtle animation
+        countDisplay.style.transform = 'scale(1.1)';
+        setTimeout(() => { countDisplay.style.transform = ''; }, 150);
+      }
+
+      // ----- attach event listeners -----
+      incrementBtn.addEventListener('click', increment);
+      decrementBtn.addEventListener('click', decrement);
+      resetBtn.addEventListener('click', reset);
+
+      // optional keyboard support (arrow keys)
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowUp' || e.key === '+') {
+          e.preventDefault();
+          increment();
+        } else if (e.key === 'ArrowDown' || e.key === '-') {
+          e.preventDefault();
+          decrement();
+        } else if (e.key === 'r' || e.key === 'R') {
+          // optional reset with R (avoid interfering with typing, but no inputs here)
+          e.preventDefault();
+          reset();
+        }
+      });
+
+      // initialize UI
+      updateUI();
+
+      // small extra: log a friendly message to console (for beginners)
+      console.log('✅ Basic HTML/CSS/JS counter ready. Try clicking +1, -1, or reset!');
+    })();
+  </script>
+</body>
+</html>
